@@ -1,0 +1,279 @@
+<apex:page standardController="fw1__Payment__c" extensions="fw1.PaymentController" action="{!paymentOnLoad}">
+
+<apex:sectionHeader title="Payment"/>
+
+<apex:form >
+    <apex:pageBlock >
+        <apex:pageMessages />
+        <apex:pageBlockSection id="paymentTo" columns="1" title="Payment To" collapsible="false">
+            <apex:pageMessages rendered="{!payment.fw1__Payment_Processor__c == null}" />
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">  
+                <apex:outputLabel value="Payment To"/>  
+                <apex:panelGrid columns="3">
+                    <apex:actionRegion >
+                        <apex:inputField value="{!payment.fw1__Payment_To__c}">
+                            <apex:actionSupport event="onchange" 
+                                                reRender="paymentTo, paymentSource" 
+                                                status="status3" 
+                                                action="{!clearPaymentTo}"
+                                                />
+                        </apex:inputField>
+                    </apex:actionRegion>
+             
+                    <apex:outputPanel >           
+                        <apex:actionRegion >                            
+                            <apex:inputField value="{!payment.fw1__Payment_Recipient_Account__c}" rendered="{!payment.fw1__Payment_To__c == 'Account'}" style="vertical-align:top">
+                                <apex:actionSupport event="onfocus" 
+                                                    reRender="paymentTo, paymentSource" 
+                                                    action="{!lookupMerchantProfile}"
+                                                    />
+                            </apex:inputField>
+                        </apex:actionRegion> 
+                        <apex:outputLabel value="Open window to select an account. " rendered="{!payment.fw1__Payment_To__c == 'Account'}"/>   
+          
+                        <apex:actionRegion >                            
+                            <apex:inputField value="{!payment.fw1__Payment_Recipient_Contact__c}" rendered="{!payment.fw1__Payment_To__c == 'Contact'}" style="vertical-align:top">
+                                <apex:actionSupport event="onfocus"
+                                                    reRender="paymentTo, paymentSource"
+                                                    action="{!lookupMerchantProfile}"
+                                                    />
+                            </apex:inputField>
+                        </apex:actionRegion> 
+                        <apex:outputLabel value="Open window to select a contact. " rendered="{!payment.fw1__Payment_To__c == 'Contact'}"/> 
+                    </apex:outputPanel>      
+                    
+                    <apex:actionStatus startText=" Just a moment..." id="status3"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Payment Processor"/>
+                <apex:outputField value="{!payment.fw1__Payment_Processor__c}"/>
+            </apex:pageBlockSectionItem>
+            
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock >  
+        <!--<apex:pageMessages />-->
+
+        <apex:pageBlockSection columns="2" title="Payment From" collapsible="false">
+        </apex:pageBlockSection>
+        
+        <!--
+        <apex:pageBlockSection id="paymentMain" columns="1">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Payment Processor"/>
+                <apex:actionRegion >
+                    <apex:selectList size="1" value="{!payment.fw1__Payment_Processor__c}">
+                        <apex:selectOptions value="{!processorsInSelectList}"/>
+                        <apex:actionSupport event="onchange" reRender="paymentProfile, paymentSource" action="{!lookupProcessorInfo}"/>
+                    </apex:selectList>
+                </apex:actionRegion>
+            </apex:pageBlockSectionItem>
+            <apex:outputText ></apex:outputText>
+        </apex:pageBlockSection> 
+        -->
+        
+        <apex:pageBlockSection id="paymentSource" columns="1" showHeader="false">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">  
+                <apex:outputLabel value="Payment From"/>  
+                <apex:panelGrid columns="3">
+                    <apex:actionRegion >
+                        <apex:inputField value="{!payment.fw1__PaymentSource__c}">
+                            <apex:actionSupport event="onchange" 
+                                                reRender="paymentSource, paymentEntry" 
+                                                status="status2" 
+                                                action="{!clearPaymentSource}"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+             
+                    <apex:outputPanel >
+                        <apex:actionRegion >
+                            <apex:inputField value="{!payment.fw1__Opportunity__c}" rendered="{!payment.fw1__PaymentSource__c == 'Opportunity'}" style="vertical-align:top">
+                                <apex:actionSupport event="onfocus"  
+                                                    reRender="paymentSource, paymentEntry" 
+                                                    action="{!setPaymentDetails}"/>
+                            </apex:inputField>
+                        </apex:actionRegion>                 
+                        <apex:outputLabel value="Open window to select an opportunity. " rendered="{!payment.fw1__PaymentSource__c == 'Opportunity'}"/> 
+           
+                        <apex:actionRegion >                            
+                            <apex:inputField value="{!payment.fw1__Account__c}" rendered="{!payment.fw1__PaymentSource__c == 'Account'}" style="vertical-align:top">
+                                <apex:actionSupport event="onfocus" 
+                                                    reRender="paymentSource, paymentEntry" 
+                                                    action="{!setPaymentDetails}"/>
+                            </apex:inputField>
+                        </apex:actionRegion> 
+                        <apex:outputLabel value="Open window to select an account. " rendered="{!payment.fw1__PaymentSource__c == 'Account'}"/>   
+          
+                        <apex:actionRegion >                            
+                            <apex:inputField value="{!payment.fw1__Contact__c}" id="txtContact" rendered="{!payment.fw1__PaymentSource__c == 'Contact'}" style="vertical-align:top">
+                                <apex:actionSupport event="onfocus"
+                                                    action="{!setPaymentDetails}"                                
+                                                    reRender="paymentSource, paymentEntry"/>
+                            </apex:inputField>
+                        </apex:actionRegion> 
+                        <apex:outputLabel value="Open window to select a contact. " rendered="{!payment.fw1__PaymentSource__c == 'Contact'}"/> 
+                    </apex:outputPanel>      
+                    
+                    <apex:actionStatus startText=" Just a moment..." id="status2"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+        
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" helpText="A name that will identify this payment."> 
+                    <apex:outputLabel value="Payment Name"/>
+                    <apex:inputField value="{!payment.Name}"/>      
+            </apex:pageBlockSectionItem>
+            <apex:inputField value="{!payment.fw1__Amount__c}"/>     
+            <apex:inputField value="{!payment.fw1__Email__c}" rendered="{!useCyberSource == true}"/> 
+            
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Payment Method"/>
+                <apex:actionRegion >
+                    <apex:selectList value="{!payment.fw1__Payment_Method__c}" size="1" >
+                        <apex:selectOptions value="{!paymentMethods}"/>
+                        <apex:actionSupport event="onchange" reRender="paymentEntry"/>
+                    </apex:selectList>
+                </apex:actionRegion>
+            </apex:pageBlockSectionItem>
+            
+        </apex:pageBlockSection>
+        
+        <apex:outputPanel id="paymentEntry">
+        
+            <apex:pageBlockSection columns="2" title="Credit Card Information" collapsible="false" rendered="{!payment.fw1__Payment_Method__c == 'Credit Card'}">
+            </apex:pageBlockSection>
+        
+            <apex:actionRegion >
+                <apex:pageBlockSection id="paymentProfile" columns="2" rendered="{!payment.fw1__Payment_Method__c == 'Credit Card'}">
+                    
+                    <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!paymentProfileExists == true}">
+                        <apex:outputLabel value="Select Payment Profile"/>
+                        <apex:actionRegion >
+                            <apex:selectList value="{!lstPaymentProfile}" size="1" >
+                                <apex:selectOptions value="{!PaymentProfileSelectList}"/>
+                                <apex:actionSupport event="onchange" reRender="paymentProfile, paymentProfileNameSection, paymentSource" action="{!getProfileInfo}"/>
+                            </apex:selectList>
+                        </apex:actionRegion>
+                    </apex:pageBlockSectionItem> 
+                    <apex:outputText rendered="{!paymentProfileExists == true}"></apex:outputText>
+                    
+                    <apex:pageBlockSectionItem helpText="''Charge'' - choose this option to request authorization and capture funds instantly. ''Authorization'' - choose this option to request authorization only, and manually capture funds at a later time.">
+                        <apex:outputLabel value="Payment Type"/>
+                        <apex:inputField value="{!payment.fw1__Type__c}"/>
+                    </apex:pageBlockSectionItem> 
+                    <apex:outputText ></apex:outputText>
+                    <apex:inputField value="{!payment.fw1__Credit_Card_Type__c}"/>
+                    <apex:pageBlockSectionItem rendered="{!requireCVV2 == true}" helpText="3-digit number on the back of the card. 4-digit on the front for American Express cards.">
+                      <apex:outputLabel value="CVV2" />
+                      <apex:inputText value="{!MaskedCVV2}" />
+                    </apex:pageBlockSectionItem> 
+                    <apex:outputText rendered="{!requireCVV2 == false}"></apex:outputText>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Name on Card (First Name)"/>
+                        <apex:inputField value="{!payment.fw1__First_Name__c}"/>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:inputField value="{!payment.fw1__Last_Name__c}"/> 
+                    <apex:inputField value="{!payment.fw1__Credit_Card_Number__c}"/>
+                    
+                    <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                        <apex:outputLabel value="Expiration"/>
+                        <apex:panelGrid columns="3">
+                            <apex:selectList value="{!payment.fw1__Expiry_Month__c}" size="1" >
+                                <apex:selectOptions value="{!expirationMonth}"/>         
+                            </apex:selectList>
+                            <apex:outputLabel value="/"/>
+                            <apex:selectList value="{!payment.fw1__Expiry_Year__c}" size="1" >
+                                <apex:selectOptions value="{!expirationYear}"/>         
+                            </apex:selectList>
+                        </apex:panelGrid>
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!RenderSavePaymentProfile}" helpText="For quick access later, you can save credit card information as Payment Profiles. Note that stored credit card numbers are encrypted.">
+                        <apex:outputLabel value="Save Card Information as Payment Profile"/>
+                        
+                        <apex:inputCheckbox value="{!savePaymentProfile}">
+                            <apex:actionSupport event="onclick" reRender="paymentProfileNameSection" action="{!autoPopulatePaymentProfileName}"/>
+                        </apex:inputCheckbox>
+                        
+                    </apex:pageBlockSectionItem>
+                    
+                </apex:pageBlockSection>
+            </apex:actionRegion>
+        
+            <apex:pageBlockSection id="paymentProfileNameSection" columns="2">
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!savePaymentProfile == true}">
+                    <apex:outputLabel value="Payment Profile Name"/>
+                    <apex:inputText value="{!paymentProfileName}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="Address" collapsible="false" rendered="{!payment.fw1__Payment_Method__c == 'Credit Card'}">
+            </apex:pageBlockSection>
+        
+            <apex:pageBlockSection id="paymentAddress" columns="2" rendered="{!payment.fw1__Payment_Method__c == 'Credit Card'}">
+                <apex:inputField value="{!payment.fw1__Billing_Street__c}"/>
+                <apex:pageBlockSectionItem helpText="Shipping address is optional.">
+                    <apex:outputLabel value="Shipping Street"/>
+                    <apex:inputField value="{!payment.fw1__Shipping_Street__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!payment.fw1__Billing_City__c}"/>
+                <apex:inputField value="{!payment.fw1__Shipping_City__c}"/>
+                <apex:inputField value="{!payment.fw1__Billing_State__c}"/>
+                <apex:inputField value="{!payment.fw1__Shipping_State__c}"/>
+                <apex:inputField value="{!payment.fw1__Billing_Zip__c}"/>
+                <apex:inputField value="{!payment.fw1__Shipping_Zip__c}"/>
+                <apex:inputField value="{!payment.fw1__Billing_Country__c}"/>
+                <apex:inputField value="{!payment.fw1__Shipping_Country__c}"/>
+            </apex:pageBlockSection>
+        
+            <apex:pageBlockSection columns="2" title="Bank Account Information" collapsible="false" rendered="{!payment.fw1__Payment_Method__c == 'eCheck'}">
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" rendered="{!payment.fw1__Payment_Method__c == 'eCheck'}">
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!paymentProfileExists == true}">
+                    <apex:outputLabel value="Select Payment Profile"/>
+                    <apex:actionRegion >
+                        <apex:selectList value="{!lstPaymentProfile}" size="1" >
+                            <apex:selectOptions value="{!PaymentProfileSelectList}"/>
+                            <apex:actionSupport event="onchange" reRender="paymentEntry" action="{!getProfileInfo}"/>
+                        </apex:selectList>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem> 
+                <apex:outputText rendered="{!paymentProfileExists == true}"></apex:outputText>
+                <apex:inputField value="{!payment.fw1__Bank_Aba_Code__c}"/>
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                    <apex:outputLabel value="Name On Account"/>
+                    <apex:inputText value="{!nameOnAccount}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!payment.fw1__Bank_Account_Number__c}"/>
+                <apex:outputText rendered="{!RenderSavePaymentProfile}"></apex:outputText>
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!RenderSavePaymentProfile}" helpText="For quick access later, you can save bank account information as Payment Profiles. Note that stored bank account numbers are encrypted.">
+                    <apex:outputLabel value="Save Bank Account as Payment Profile"/>
+                    <apex:inputCheckbox value="{!savePaymentProfile}">
+                        <apex:actionSupport event="onclick" reRender="profileName" action="{!autoPopulatePaymentProfileName}"/>
+                    </apex:inputCheckbox>        
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageblockSection id="profileName">
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!savePaymentProfile == true}">
+                    <apex:outputLabel value="Payment Profile Name"/>
+                    <apex:inputText value="{!paymentProfileName}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            
+        </apex:outputPanel>
+        
+        <apex:pageBlockButtons location="bottom">
+            <input type="submit" style="width:0; height:0; vertical-align:middle; visibility:hidden"/>
+            <apex:commandButton value="Reset" action="{!paymentReset}"/>
+            <apex:commandButton action="{!paymentReview}"
+                                value="Next"/>
+        </apex:pageBlockButtons>
+
+    </apex:pageBlock>
+</apex:form>
+
+</apex:page>

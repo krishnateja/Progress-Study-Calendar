@@ -1,0 +1,2 @@
+<apex:page controller="fw1.SettingsController" action="{!goToSettings}">
+</apex:page>

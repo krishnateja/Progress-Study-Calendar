@@ -1,0 +1,7 @@
+<apex:component controller="fw1.EditTemplateController">
+    <apex:attribute name="template" description="" type="String" required="true" assignTo="{!template}"/>
+    <apex:attribute name="label" description="" type="String" required="true"/>
+    
+    <apex:commandLink value="{!label}" action="{!editTemplate}" target="_blank"/>
+    
+</apex:component>

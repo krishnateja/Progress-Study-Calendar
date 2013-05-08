@@ -1,0 +1,57 @@
+<apex:page standardController="fw1__Payment__c" extensions="fw1.PaymentController">
+    <apex:sectionHeader title="Payment Confirmation"/>
+    <apex:form >
+        <apex:pageBlock mode="edit">
+            <apex:pageBlockSection columns="1">
+                <apex:pageMessages />
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__Payment_To__c == 'Account'}">
+                    <apex:outputText value="Payment To"/>
+                    <apex:outputText value="{!paymentToName}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__Payment_To__c == 'Contact'}">
+                    <apex:outputText value="Payment To"/>
+                    <apex:outputText value="{!paymentToName}"/>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!payment.fw1__Payment_Processor__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:pageBlock mode="edit">
+            <apex:pageBlockSection columns="1">
+                <!--<apex:pageMessages />-->
+                <br/>
+                <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__PaymentSource__c != null}">
+                    <apex:outputLabel value="Payment From" />
+                    <apex:panelGrid columns="3" >        
+                        <apex:outputText value="{!payment.fw1__PaymentSource__c}"/> 
+                        <apex:outputText value=" - " />     
+                        <apex:outputText value="{!opportunity.Name}" rendered="{!payment.fw1__PaymentSource__c == 'Opportunity'}"/>
+                        <apex:outputText value="{!account.Name}" rendered="{!payment.fw1__PaymentSource__c == 'Account'}"/>
+                        <apex:outputText value="{!payment.fw1__Last_Name__c},{!payment.fw1__First_Name__c}" rendered="{!payment.fw1__PaymentSource__c == 'Contact'}"/>
+                    </apex:panelGrid>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Payment Name</apex:outputLabel>
+                    <apex:commandLink value="{!payment.Name}" action="{!paymentPageRedirector}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:outputField value="{!payment.fw1__Amount__c}"/>
+                <!--
+                <apex:pageBlockSectionItem rendered="{!payment.Payment_Method__c == 'Credit Card'}">
+                    <apex:outputLabel >Payment from</apex:outputLabel>
+                    <apex:outputText >{!payment.First_Name__c} {!payment.Last_Name__c}</apex:outputText>
+                </apex:pageBlockSectionItem>
+                -->
+                <br/>
+                <br/>
+                <apex:outputText ><i>Please refrain from refreshing this page to avoid processing the payment again.</i></apex:outputText>
+                <br/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Go to Payment Record" action="{!paymentPageRedirector}"/>
+            </apex:pageBlockButtons>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

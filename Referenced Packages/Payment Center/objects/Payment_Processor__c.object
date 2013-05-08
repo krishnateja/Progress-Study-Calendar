@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <fields>
+        <fullName>API_Live_Password2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live Password</label>
+        <length>80</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Live_Password__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>zAPI Live Password - OBSOLETE</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Live_Signature2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live Signature</label>
+        <length>175</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Live_Signature__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>zAPI Live Signature - OBSOLETE</label>
+        <length>180</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Live_Transaction_Key_Encrypted__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live Transaction Key Encrypted</label>
+        <length>20</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Live_Transaction_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live Transaction Key</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>API_Live_URL1__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live URL1</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>API_Live_URL2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live URL2</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>API_Live_User__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Live User</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Test_Password2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test Password</label>
+        <length>80</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Test_Password__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>zAPI Test Password - OBSOLETE</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Test_Signature2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test Signature</label>
+        <length>175</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Test_Signature__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>zAPI Test Signature - OBSOLETE</label>
+        <length>180</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Test_Transaction_Key_Encrypted__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test Transaction Key Encrypted</label>
+        <length>20</length>
+        <maskChar>X</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>API_Test_Transaction_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test Transaction Key</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>API_Test_URL1__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test URL1</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>API_Test_URL2__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test URL2</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>API_Test_User__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Test User</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Version__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>API Version</label>
+        <length>10</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Allow_Multi_Capture__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Allow Multi Capture</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Description</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Enable_eCheck__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Enable eCheck</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Live__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Live</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Center_Setting__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Center Setting</label>
+        <referenceTo>Payment_Center_Setting__c</referenceTo>
+        <relationshipLabel>Payment Processors</relationshipLabel>
+        <relationshipName>Payment_Processors</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Require_CVV2__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Require CVV2</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Test_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Test Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Test_Credit_Card_Number__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Test Credit Card Number</label>
+        <length>19</length>
+        <maskChar>X</maskChar>
+        <maskType>creditCard</maskType>
+        <required>false</required>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>Use_As_Default__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use As Default</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_AuthorizeNet_API__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use Authorize.Net API</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_CyberSource_API__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use CyberSource API</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Paypal_API__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use Paypal API</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Recurly_API__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use Recurly API</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Stripe_API__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use Stripe API</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_URL__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Use URL</label>
+        <picklist>
+            <picklistValues>
+                <fullName>URL1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>URL2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <label>Payment Processor</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Live__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Payment Processor Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Payment Processors</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Live__c</customTabListAdditionalFields>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <listViewButtons>Restore_Paypal_Settings</listViewButtons>
+        <listViewButtons>Restore_AuthorizeNet_Settings</listViewButtons>
+        <listViewButtons>Restore_CyberSource_Settings</listViewButtons>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Restore_AuthorizeNet_Settings</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Restore Authorize.Net Settings</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/apex.js&quot;)}
+
+var result = sforce.apex.execute(&quot;fw1.PackagedData&quot;, &quot;restoreAuthorizeNetData&quot;, {});
+
+alert(&apos;Authorize.Net Settings Restored&apos;);
+
+window.top.location.href = window.top.location.href;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Restore_CyberSource_Settings</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Restore CyberSource Settings</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/apex.js&quot;)} 
+
+var result = sforce.apex.execute(&quot;fw1.PackagedData&quot;, &quot;restoreCyberSourceData&quot;, {}); 
+
+alert(&apos;CyberSource Settings Restored&apos;); 
+
+window.top.location.href = window.top.location.href;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Restore_Paypal_Settings</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Restore PayPal Settings</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/apex.js&quot;)} 
+
+var result = sforce.apex.execute(&quot;fw1.PackagedData&quot;, &quot;restorePaypalData&quot;, {}); 
+
+alert(&apos;Paypal Settings Restored&apos;); 
+
+window.top.location.href = window.top.location.href;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Restore_Recurly_Settings</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Restore Recurly Settings</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/apex.js&quot;)} 
+
+var result = sforce.apex.execute(&quot;fw1.PackagedData&quot;, &quot;restoreRecurlyData&quot;, {}); 
+
+alert(&apos;Recurly Settings Restored&apos;); 
+
+window.top.location.href = window.top.location.href;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Restore_Stripe_Settings</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Restore Stripe Settings</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/17.0/apex.js&quot;)} 
+
+var result = sforce.apex.execute(&quot;fw1.PackagedData&quot;, &quot;restoreStripeData&quot;, {}); 
+
+alert(&apos;Stripe Settings Restored&apos;); 
+
+window.top.location.href = window.top.location.href;</url>
+    </webLinks>
+</CustomObject>

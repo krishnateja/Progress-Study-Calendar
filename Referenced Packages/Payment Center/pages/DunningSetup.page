@@ -1,0 +1,112 @@
+<apex:page standardController="fw1__Payment_Center_Setting__c" extensions="fw1.DunningSetupController" showHeader="false" sidebar="false">
+<apex:sectionHeader title="Dunning Management"/>
+<script>
+    function closeAndRefreshParent() {         
+      parent.window.close();
+      parent.window.opener.location.href = "/{!$Request.id}";          
+    }
+</script>
+<apex:form id="dForm">
+  <apex:pageBlock >  
+    <apex:pageMessages />
+        
+    <apex:pageBlockSection title="Auto-BillPay Settings" collapsible="false" columns="1">
+       
+      <apex:outputLabel value="The system will retry failed automatic payments (Auto-BillPay) according to your preferences below. After all attempts have been made and payment is still unsuccessful, the system will stop trying to collect payment and a manual follow-up is needed at that point."/>
+       
+      
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+        <apex:outputLabel value="1st failed attempt"/>
+        <apex:selectList value="{!FirstAttempt}" size="1" >
+          <apex:selectOptions value="{!retrySelection}"/>   
+          <apex:actionSupport event="onchange" reRender="dForm"/>      
+        </apex:selectList>
+      </apex:pageBlockSectionItem>  
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!RenderSecondAttempt}" >
+        <apex:outputLabel value="2nd failed attempt" rendered="{!RenderSecondAttempt}"/>
+        <apex:selectList value="{!SecondAttempt}" size="1"  rendered="{!RenderSecondAttempt}">
+          <apex:selectOptions value="{!retrySelection}"/>  
+           <apex:actionSupport event="onchange" reRender="dForm"/>         
+        </apex:selectList>
+      </apex:pageBlockSectionItem>          
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!RenderThirdAttempt}">
+        <apex:outputLabel value="3rd failed attempt" rendered="{!RenderThirdAttempt}"/>
+        <apex:selectList value="{!ThirdAttempt}" size="1" rendered="{!RenderThirdAttempt}">
+          <apex:selectOptions value="{!retrySelection}"/>         
+        </apex:selectList>
+      </apex:pageBlockSectionItem>
+      <!--    
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+        <apex:outputLabel value="Then Finally"/>
+        <apex:selectList value="{!FinalAttempt}" size="1" >
+          <apex:selectOptions value="{!finalSelection}"/>         
+        </apex:selectList>
+      </apex:pageBlockSectionItem>
+      
+      <apex:outputtext value="After all attempts have been made and payment is still unsuccessful, the system will stop trying to collect payment and a manual follow-up is needed at this point."/>
+      -->          
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+         <apex:outputLabel value="Email Template"/>
+         <apex:outputpanel >
+             <c:EmailTemplates value="{!FailedAutoPaymentTemplate}"/>&nbsp;&nbsp;
+             <c:EditTemplate template="{!FailedAutoPaymentTemplate}" label="Edit Template"/>
+         </apex:outputpanel>
+      </apex:pageBlockSectionItem>  
+    </apex:pageBlockSection> 
+      
+    <apex:pageBlockSection title="Outstanding Invoice Settings" collapsible="false" columns="1">
+      <apex:outputLabel value="The system will send reminder emails based on your settings below."/>
+       
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+        <apex:outputLabel value="Outstanding invoice reminder"/>  
+        <apex:outputPanel >    
+            <apex:selectList value="{!OutstandingInvoiceSchedulerStatus}" size="1" >
+              <apex:selectOptions value="{!SchedulerStatusSelection}"/>         
+            </apex:selectList>  
+            
+            <apex:outputText > Runs every day at </apex:outputText>
+            <apex:selectList value="{!SendEmailTime}" size="1" >
+                <apex:selectOptions value="{!TimeSelection}"/>         
+            </apex:selectList>
+            
+        </apex:outputPanel> 
+      </apex:pageBlockSectionItem> 
+        
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle" > 
+        <apex:outputLabel value="Reminders are sent "/>
+        <apex:outputPanel >
+            <apex:inputField style="width:30px;" value="{!fw1__Payment_Center_Setting__c.fw1__Dunning_Age__c}"/> 
+            <apex:outputText > days after due date, then repeats on the same interval</apex:outputText>
+        </apex:outputPanel>     
+      </apex:pageBlockSectionItem>
+      
+      <!--
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+        <apex:outputLabel value="Outstanding invoices are checked every day at"/>  
+        <apex:selectList value="{!SendEmailTime}" size="1" >
+          <apex:selectOptions value="{!TimeSelection}"/>         
+        </apex:selectList>   
+      </apex:pageBlockSectionItem>
+      -->
+      
+      <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+         <apex:outputLabel value="Email Template"/>
+         <apex:outputpanel >
+             <c:EmailTemplates value="{!fw1__Payment_Center_Setting__c.fw1__Outstanding_Invoice_Template__c}"/>&nbsp;&nbsp;
+             <c:EditTemplate template="{!fw1__Payment_Center_Setting__c.fw1__Outstanding_Invoice_Template__c}" label="Edit Template"/>
+         </apex:outputpanel>
+      </apex:pageBlockSectionItem>  
+    </apex:pageBlockSection> 
+    
+    <apex:pageBlockButtons location="bottom">
+      <apex:outputPanel id="buttons">
+          <apex:commandButton value="Cancel" onclick="parent.window.close();"/>   
+          <apex:commandButton action="{!Save}" value="Save" status="closer" rerender="buttons"/>
+          <apex:actionStatus startText=" Saving..." stopText="" onStop="window.close();" id="closer"/>       
+      </apex:outputPanel>
+    </apex:pageBlockButtons>
+    
+  </apex:pageBlock>
+</apex:form>
+
+</apex:page>

@@ -1,0 +1,451 @@
+<apex:page standardController="fw1__Invoice__c" extensions="fw1.InvoiceActionsController" sidebar="false" showHeader="false" >
+<apex:sectionHeader title="{!$Organization.Name} Online Payments" />
+
+<apex:form >
+    <apex:pageBlock >
+        <table style="border-collapse:collapse;" width="100%">
+            <tr>
+                <td>
+                </td>
+                <td align="right">
+                    <table style="border-collapse:collapse;">
+                        <tr>
+                            <td style="padding: 2px;" align="right">
+                                Invoice # :
+                            </td>
+                            <td style="padding: 2px;" align="right">
+                                {!invoiceNumber}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="border-collapse:collapse;" width="100%">
+                        <tr style="border-top: 1px solid #808080;">
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:center">Line Item</th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">Quantity</th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">
+                                <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Quantity__c > 0}">
+                                    Discount Quantity
+                                </apex:outputPanel>
+                            </th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">Unit Price</th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">
+                                <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                    Discount %
+                                </apex:outputPanel>
+                            </th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">
+                                <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Amount__c > 0}">
+                                    Discount Amount
+                                </apex:outputPanel>
+                            </th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">
+                                <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                    Total Discount Amount
+                                </apex:outputPanel>
+                            </th>
+                            <th style="padding: 4px;border-bottom: 1px solid #808080;text-align:right">Amount</th>
+                        </tr>
+                        <apex:repeat var="invLine" value="{!invoiceLines}">
+                            <tr>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;">{!invLine.name}</td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!invLine.fw1__Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Quantity__c > 0}">
+                                        <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                            <apex:param value="{!invLine.fw1__Discount_Quantity__c}"/>
+                                        </apex:outputText>
+                                    </apex:outputPanel>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!invLine.fw1__Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                        <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                            <apex:param value="{!invLine.fw1__Discount_Percentage__c}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value=" %" rendered="{!invLine.fw1__Discount_Percentage__c != 0 || invLine.fw1__Discount_Percentage__c != null}"/>
+                                    </apex:outputPanel>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Amount__c > 0}">
+                                        <apex:outputText rendered="{!invLine.fw1__Discount_Amount__c != 0 || invLine.fw1__Discount_Amount__c != null}" value="{!inv.fw1__Email_Currency_Symbol__c}" ></apex:outputText>
+                                        <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                            <apex:param value="{!invLine.fw1__Discount_Amount__c}"/>
+                                        </apex:outputText>
+                                    </apex:outputPanel>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputPanel rendered="{!inv.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                        <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                        <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                            <apex:param value="{!invLine.fw1__Total_Discount_Amount__c}"/>
+                                        </apex:outputText>
+                                    </apex:outputPanel>
+                                </td>
+                                <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!invLine.fw1__Amount__c}"/>
+                                    </apex:outputText>
+                                </td>            
+                            </tr>
+                        </apex:repeat> 
+                        <apex:outputPanel rendered="{!inv.Invoice_Discount_Amount__c != 0 || inv.Invoice_Discount_Amount__c != null ||
+                                                      inv.Invoice_Discount_Percentage__c != 0 || inv.Invoice_Discount_Percentage__c != null ||
+                                                      inv.Tax__c != 0 || inv.Tax__c != null ||
+                                                      inv.Shipping_And_Handling__c != 0 || inv.Shipping_And_Handling__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">Subtotal</td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Total_Lines_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!inv.fw1__Invoice_Discount_Percentage__c != 0 || inv.fw1__Invoice_Discount_Percentage__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">
+                                    Discount (
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Invoice_Discount_Percentage__c}"/>
+                                    </apex:outputText>
+                                    % )
+                                </td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!(inv.Total_Lines_Amount__c * inv.Invoice_Discount_Percentage__c) / 100 }"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!inv.fw1__Invoice_Discount_Amount__c != 0 || inv.fw1__Invoice_Discount_Amount__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">Discount Amount</td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Invoice_Discount_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!(inv.Invoice_Discount_Amount__c != 0 || inv.Invoice_Discount_Amount__c != null ||
+                                                       inv.Invoice_Discount_Percentage__c != 0 || inv.Invoice_Discount_Percentage__c != null) &&
+                                                      (inv.Tax__c != 0 || inv.Tax__c != null ||
+                                                       inv.Shipping_And_Handling__c != 0 || inv.Shipping_And_Handling__c != null)}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;font-style:italic;">Net Amount</td>
+                                <td style="padding: 4px;text-align: right;font-style:italic;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                        <apex:param value="{!inv.fw1__Net_Amount__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!inv.fw1__Tax__c != 0 || inv.fw1__Tax__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">
+                                    Tax (
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Tax__c}"/>
+                                    </apex:outputText>
+                                    % )
+                                </td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!(inv.Net_Amount__c * inv.Tax__c) / 100 }"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!inv.fw1__Shipping_And_Handling__c != 0 || inv.fw1__Shipping_And_Handling__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">Shipping and Handling</td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                        <apex:param value="{!inv.fw1__Shipping_And_Handling__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        
+                        <tr>
+                            <td colspan="7" style="padding: 4px;text-align: right;font-weight:bold;">
+                                <apex:outputText rendered="{!inv.fw1__Total_Paid_Amount__c != 0 || inv.fw1__Total_Paid_Amount__c != null || inv.fw1__Authorized_Amount__c != 0 || inv.fw1__Authorized_Amount__c != null}" value="Total"></apex:outputText>
+                                <apex:outputText rendered="{!!(inv.fw1__Total_Paid_Amount__c != 0 || inv.fw1__Total_Paid_Amount__c != null || inv.fw1__Authorized_Amount__c != 0 || inv.fw1__Authorized_Amount__c != null)}" value="Balance Due"></apex:outputText>
+                            </td>
+                            <td style="padding: 4px;text-align: right;font-weight:bold;">
+                                <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                    <apex:param value="{!inv.fw1__Total_Invoice_Amount__c}"/> 
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                        <apex:outputPanel rendered="{!inv.fw1__Authorized_Amount__c != 0 || inv.fw1__Authorized_Amount__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">Authorized Amount</td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Authorized_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>                 
+                        <apex:outputPanel rendered="{!inv.fw1__Total_Paid_Amount__c != 0 || inv.fw1__Total_Paid_Amount__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;">Paid Amount</td>
+                                <td style="padding: 4px;text-align: right;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                        <apex:param value="{!inv.fw1__Total_Paid_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!inv.Total_Paid_Amount__c != 0 || inv.Total_Paid_Amount__c != null ||
+                                                      inv.Authorized_Amount__c != 0 || inv.Authorized_Amount__c != null}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;font-weight:bold;">Balance Due</td>
+                                <td style="padding: 4px;text-align: right;font-weight:bold;">
+                                    <apex:outputtext >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                        <apex:param value="{!inv.fw1__Balance_Due__c}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        
+                        <!-- Required Installment -->
+                        <apex:outputPanel rendered="{!installmentDue > 0}">
+                            <tr>
+                                <td colspan="7" style="padding: 4px;text-align: right;font-weight:bold;">
+                                    Required Installment
+                                </td>
+                                <td style="padding: 4px;text-align: right;font-weight:bold;">
+                                    <apex:outputText >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputText>
+                                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                        <apex:param value="{!installmentDue}"/> 
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        
+                    </table>
+                    <br/>
+                </td>
+            </tr>
+        </table>
+    </apex:pageBlock>
+
+    <apex:pageMessages />
+    <apex:pageBlock >
+        <apex:pageblockSection columns="2" title="Payment Details">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Payment Method"/>
+                <apex:outputText value="{!paymentMethod}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Pay"/>
+                <apex:outputText value="{!paymentOption}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!useCyberSource == true && paymentMethod == 'Credit Card'}">
+                <apex:outputLabel value="Email"/>
+                <apex:outputText value="{!email}"/>
+            </apex:pageBlockSectionItem>
+            <apex:outputText rendered="{!useCyberSource == false || paymentMethod != 'Credit Card'}"></apex:outputText>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel >
+                    <apex:outputText value="Amount To Pay"></apex:outputText>
+                    <apex:outputText value=" (" rendered="{!paymentOption == 'Down Payment'}"></apex:outputText>
+                    <apex:outputField value="{!inv.fw1__Required_Down_Payment__c}" rendered="{!paymentOption == 'Down Payment'}"/>
+                    <apex:outputText value=")" rendered="{!paymentOption == 'Down Payment'}"></apex:outputText>
+                </apex:outputLabel>
+                <apex:outputPanel >
+                    <apex:outputText >{!inv.fw1__Email_Currency_Symbol__c}</apex:outputText>
+                    <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                        <apex:param value="{!paymentAmount}"/> 
+                    </apex:outputText>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:outputText rendered="{!paymentOption == 'Down Payment'}"></apex:outputText>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!paymentOption == 'Down Payment'}">
+                <apex:outputLabel value="Payment Terms"/>
+                <apex:outputPanel >
+                    <apex:outputtext value="NET "></apex:outputtext>
+                    <apex:outputField value="{!inv.fw1__Terms__c}"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:outputText rendered="{!paymentOption == 'Down Payment'}"></apex:outputText>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!paymentOption == 'Down Payment'}">
+                <apex:outputLabel value="I agree to the payment terms"/>
+                <apex:inputCheckbox value="{!acceptPaymentTerms}" disabled="true"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageblockSection>
+        
+        <apex:pageBlockSection title="Credit Card Information" columns="1" rendered="{!paymentMethod == 'Credit Card'}">  
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">              
+                <apex:outputLabel value="Name on Card"/>
+                <apex:panelGrid columns="2">
+                    <apex:outputText value="{!firstName}"/>
+                    <apex:outputText value="{!lastName}"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle"> 
+                <apex:outputLabel value="Credit Card Type"/>
+                <apex:outputText value="{!creditCardType}"/>
+            </apex:pageBlockSectionItem>    
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputText value="Credit Card Number"/>      
+                <apex:panelGrid columns="5">            
+                    <apex:outputText value="{!maskedCreditCardNumber}"/>
+                    <apex:outputText /> <apex:outputText />
+                    <apex:outputText value="CVV2" rendered="{!requireCVV2 == true}"/>
+                    <apex:outputText value="{!MaskedCVV2}" rendered="{!requireCVV2 == true}"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">              
+                <apex:outputText value="Expiration"/>
+                <apex:panelGrid columns="3">
+                    <apex:outputText value="{!expiryMonth}"/>
+                    <apex:outputText value="/"/>
+                    <apex:outputText value="{!expiryYear}"/> 
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>  
+            
+        </apex:pageBlockSection>
+    
+        <apex:pageBlockSection title="Address" columns="1" rendered="{!paymentMethod == 'Credit Card'}">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">       
+                <apex:outputLabel value="Billing Address"/>
+                <apex:outputLabel value="{!billingStreet}"/> 
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">           
+                <apex:outputLabel />
+                <apex:panelGrid columns="3">  
+                    <apex:outputLabel value="{!billingCity},"/> 
+                    <apex:outputLabel value="{!billingState}"/> 
+                    <apex:outputLabel value="{!billingZip}"/> 
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">           
+                <apex:outputLabel />
+                <apex:outputLabel id="billCountry" value="{!billingCountry}"/> 
+            </apex:pageBlockSectionItem> 
+            
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__Shipping_Street__c != null}">       
+                <apex:outputLabel value="Shipping Address"/>
+                <apex:outputLabel value="{!shippingStreet}"/> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__Shipping_City__c != null || payment.fw1__Shipping_State__c != null || payment.fw1__Shipping_Zip__c != null}">           
+                <apex:outputLabel />
+                <apex:panelGrid columns="3">  
+                    <apex:outputLabel value="{!shippingCity},"/> 
+                    <apex:outputLabel value="{!shippingState}"/> 
+                    <apex:outputLabel value="{!shippingZip}"/> 
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle" rendered="{!payment.fw1__Shipping_Country__c != null}">           
+                <apex:outputLabel />
+                <apex:outputLabel id="shipCountry" value="{!shippingCountry}"/> 
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageblockSection columns="2" title="Bank Account Information" rendered="{!paymentMethod == 'eCheck'}">
+            <!--
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Bank Name"/>
+                <apex:outputText value="{!bankName}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Bank Account Type"/>
+                <apex:outputText value="{!bankAccountType}"/>
+            </apex:pageBlockSectionItem>
+            -->
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Bank ABA Code"/>
+                <apex:outputText value="{!maskedBankABACode}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Name On Account"/>
+                <apex:outputText value="{!nameOnAccount}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Bank Account Number"/>
+                <apex:outputText value="{!maskedBankAccountNumber}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageblockSection>
+        
+        <apex:pageblockSection columns="2" title="Reference Information" rendered="{!paymentMethod != 'Credit Card' && paymentMethod != 'eCheck'}">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Reference"/>
+                <apex:outputText value="{!paymentReference}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:outputLabel value="Payment Date"/>
+                <apex:outputField value="{!payment.fw1__Payment_Date__c}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageblockSection>
+            
+        <apex:pageBlockSection columns="1" title="Auto-BillPay" collapsible="true" rendered="{!showAutoBillPayOption == true && (paymentMethod == 'Credit Card' || paymentMethod == 'eCheck')}">
+            <apex:pageBlockSectionItem >
+                <apex:inputCheckbox value="{!enrollInAutoBillPay}" disabled="true"/>
+                <apex:outputText >Enroll me in Auto-BillPay (this will charge your credit card {!recurringSchedule})</apex:outputText>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection columns="1" title="Terms And Conditions" collapsible="true" rendered="{!requireAcceptanceOfTerms == true}">
+            <apex:pageBlockSectionItem labelStyle="vertical-align:middle">
+                <apex:inputCheckbox value="{!acceptPaymentTerms}" disabled="true"/>
+                <apex:outputPanel >
+                    <apex:outputText rendered="{!termsAndConditionsLink != null}">I accept all &nbsp;<apex:outputLink value="{!termsAndConditionsLink}" target="_blank">Terms And Conditions</apex:outputLink>&nbsp; pertaining to this transaction</apex:outputText>
+                    <apex:outputText rendered="{!termsAndConditionsLink == null}">I accept all Terms And Conditions pertaining to this transaction</apex:outputText>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton value="Make Changes" action="{!editPayment}"/>
+            
+            <script>
+                function disableOnSubmit(input) {
+                    setTimeout('disableAfterTimeout(\'' + input.id + '\');', 50);
+                }
+                function disableAfterTimeout(id) {
+                    var toDisable = document.getElementById( id );
+                    toDisable.disabled = 'disabled';
+                    // Use the Salesforce CSS style to make the button appear disabled
+                    toDisable.className = 'btnDisabled';
+                    toDisable.value = "Processing..."
+                }
+            </script>
+
+            <apex:commandButton id="Submit" value="Submit" action="{!submitPayment}" onclick="disableOnSubmit(this);" />
+            
+        </apex:pageBlockButtons>
+            
+    </apex:pageBlock>
+    
+</apex:form>
+
+</apex:page>

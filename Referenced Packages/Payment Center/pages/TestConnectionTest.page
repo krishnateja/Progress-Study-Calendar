@@ -1,0 +1,12 @@
+<apex:page standardController="fw1__Payment_Processor__c" extensions="fw1.ConnectionTestController" showHeader="false" sidebar="false">
+
+    <apex:form style="background-color:#FFFFFF">
+        <apex:outputPanel >
+            <apex:commandButton value="Test Connection" action="{!testTestConnection}"/>
+            <apex:outputText >&nbsp;</apex:outputText>
+            <apex:outputText style="color:green" value="{!connectionTestMsg}" rendered="{!testSuccessful == true}"></apex:outputText>
+            <apex:outputText style="color:red" value="{!connectionTestMsg}" rendered="{!testSuccessful == false}"></apex:outputText>
+        </apex:outputPanel>
+    </apex:form>
+
+</apex:page>

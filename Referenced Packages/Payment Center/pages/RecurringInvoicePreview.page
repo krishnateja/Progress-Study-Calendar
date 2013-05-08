@@ -1,0 +1,317 @@
+<apex:page standardController="fw1__Recurring_Invoice__c" extensions="fw1.RecurringInvoiceActionsController" sidebar="false" showHeader="false">
+
+<html>
+
+<body style="margin:30px;">
+<br/>
+<apex:outputText rendered="{!fw1__Recurring_Invoice__c.Contact__r.Name != null}">
+    Dear {!fw1__Recurring_Invoice__c.Contact__r.Name},
+    <br/>
+</apex:outputText>
+<br/>
+<apex:outputText style="white-space: pre" value="{!fw1__Recurring_Invoice__c.fw1__Email_Message__c}"/>
+<br/>
+<br/>
+
+<table style="border-collapse:collapse;" width="100%">
+    <tr style="border-top: 1px solid #808080;">
+        <td>
+            <apex:outputText style="font-weight:bold;" value="Bill To :"/> <br/>
+            <apex:outputText >{!fw1__Recurring_Invoice__c.Account__r.Name}<br/></apex:outputText>
+            <apex:outputText rendered="{!fw1__Recurring_Invoice__c.Account__r.BillingStreet} != null">
+                {!fw1__Recurring_Invoice__c.Account__r.BillingStreet}<br/>
+            </apex:outputText>
+            <apex:outputText rendered="{!fw1__Recurring_Invoice__c.Account__r.BillingCity != null}">
+                {!fw1__Recurring_Invoice__c.Account__r.BillingCity}, 
+            </apex:outputText>
+            <apex:outputText rendered="{!fw1__Recurring_Invoice__c.Account__r.BillingState != null}">
+                {!fw1__Recurring_Invoice__c.Account__r.BillingState} 
+            </apex:outputText>
+            <apex:outputText rendered="{!fw1__Recurring_Invoice__c.Account__r.BillingPostalCode != null}">
+                {!fw1__Recurring_Invoice__c.Account__r.BillingPostalCode}<br/>
+            </apex:outputText>
+            <apex:outputText rendered="{!fw1__Recurring_Invoice__c.Account__r.BillingCountry != null}">
+                {!fw1__Recurring_Invoice__c.Account__r.BillingCountry}
+            </apex:outputText>
+        </td>
+        <td align="right">
+            <br/>
+            <table style="border-collapse:collapse; border: 1px solid #808080;">
+                <tr>
+                    <td style="padding: 2px;" align="right">
+                        Invoice # :
+                    </td>
+                    <td style="padding: 2px;" align="right">
+                        INV-0000000###
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;" align="right">
+                        Invoice Date :
+                    </td>
+                    <td style="padding: 2px;" align="right">
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Start_Date__c}" /> 
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Terms__c != null || fw1__Recurring_Invoice__c.fw1__Terms__c != 0}">
+                    <tr>
+                        <td style="padding: 2px;" align="right">
+                            Terms :
+                        </td>
+                        <td style="padding: 2px;" align="right">
+                            <apex:outputText value="NET "/>
+                            <apex:outputText value="{0,number,#########0}">       
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Terms__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <tr>
+                    <td style="padding: 2px;" align="right">
+                        Due Date :
+                    </td>
+                    <td style="padding: 2px;" align="right">
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Terms__c != null || fw1__Recurring_Invoice__c.fw1__Terms__c != 0}">
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Start_Date__c + fw1__Recurring_Invoice__c.fw1__Terms__c}" /> 
+                            </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Terms__c == 0}">
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Start_Date__c}" /> 
+                            </apex:outputText>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+        </td>
+    </tr>
+    <tr style="border-bottom: 1px solid #808080;">
+        <td colspan="2">
+            <table style="border-collapse:collapse;" width="100%">
+                <tr style="background-color: #808080; color:white;">
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">Line Item</th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">Quantity</th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Quantity__c > 0}">
+                            Discount Quantity
+                        </apex:outputPanel>
+                    </th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">Unit Price</th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                            Discount %
+                        </apex:outputPanel>
+                    </th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Amount__c > 0}">
+                            Discount Amount
+                        </apex:outputPanel>
+                    </th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">
+                        <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                            Total Discount Amount
+                        </apex:outputPanel>
+                    </th>
+                    <th style="padding: 4px;border-bottom: 1px solid #808080;">Amount</th>
+                </tr>
+                <apex:repeat var="invLine" value="{!fw1__Recurring_Invoice__c.Recurring_Invoice_Lines__r}">
+                    <tr>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;">{!invLine.name}</td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!invLine.fw1__Quantity__c}"/>
+                            </apex:outputText>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Quantity__c > 0}">
+                                <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                    <apex:param value="{!invLine.fw1__Discount_Quantity__c}"/>
+                                </apex:outputText>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!invLine.fw1__Unit_Price__c}"/>
+                            </apex:outputText>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                    <apex:param value="{!invLine.fw1__Discount_Percentage__c}"/>
+                                </apex:outputText>
+                                <apex:outputText value=" %" rendered="{!invLine.fw1__Discount_Percentage__c > 0 || invLine.fw1__Discount_Percentage__c != null}"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Amount__c > 0}">
+                                <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                                <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                    <apex:param value="{!invLine.fw1__Discount_Amount__c}"/>
+                                </apex:outputText>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Discount_Percentage__c > 0}">
+                                <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                                <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                    <apex:param value="{!invLine.fw1__Total_Discount_Amount__c}"/>
+                                </apex:outputText>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="padding: 4px;border-bottom: 1px solid #808080;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!invLine.fw1__Amount__c}"/>
+                            </apex:outputText>
+                        </td>            
+                    </tr>
+                </apex:repeat> 
+                <apex:outputPanel rendered="{!Recurring_Invoice__c.Invoice_Discount_Amount__c != 0 || Recurring_Invoice__c.Invoice_Discount_Amount__c != null ||
+                                              Recurring_Invoice__c.Invoice_Discount_Percentage__c != 0 || Recurring_Invoice__c.Invoice_Discount_Percentage__c != null ||
+                                              Recurring_Invoice__c.Tax__c != 0 || Recurring_Invoice__c.Tax__c != null ||
+                                              Recurring_Invoice__c.Shipping_And_Handling__c != 0 || Recurring_Invoice__c.Shipping_And_Handling__c != null}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">Subtotal</td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Total_Lines_Amount__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Percentage__c != 0 || fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Percentage__c != null}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">
+                            Discount (
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Percentage__c}"/>
+                            </apex:outputText>
+                            % )
+                        </td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!(Recurring_Invoice__c.Total_Lines_Amount__c * Recurring_Invoice__c.Invoice_Discount_Percentage__c) / 100 }"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Amount__c != 0 || fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Amount__c != null}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">Discount Amount</td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Invoice_Discount_Amount__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <!--
+                <apex:outputPanel rendered="{!(Recurring_Invoice__c.Invoice_Discount_Percentage__c != 0 || Recurring_Invoice__c.Invoice_Discount_Percentage__c != null) && 
+                                              (Recurring_Invoice__c.Invoice_Discount_Amount__c != 0 || Recurring_Invoice__c.Invoice_Discount_Amount__c != null)}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">Total Discount Amount</td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!Recurring_Invoice__c.Total_Invoice_Discount_Amount__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                -->
+                <apex:outputPanel rendered="{!(Recurring_Invoice__c.Invoice_Discount_Amount__c != 0 || Recurring_Invoice__c.Invoice_Discount_Amount__c != null ||
+                                               Recurring_Invoice__c.Invoice_Discount_Percentage__c != 0 || Recurring_Invoice__c.Invoice_Discount_Percentage__c != null) &&
+                                              (Recurring_Invoice__c.Tax__c != 0 || Recurring_Invoice__c.Tax__c != null ||
+                                               Recurring_Invoice__c.Shipping_And_Handling__c != 0 || Recurring_Invoice__c.Shipping_And_Handling__c != null)}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;font-style:italic;">Net Amount</td>
+                        <td style="padding: 4px;text-align: right;font-style:italic;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Net_Amount__c}"/> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Tax__c != 0 || fw1__Recurring_Invoice__c.fw1__Tax__c != null}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">
+                            Tax (
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Tax__c}"/>
+                            </apex:outputText>
+                            % )
+                        </td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                                <apex:param value="{!(Recurring_Invoice__c.Net_Amount__c * Recurring_Invoice__c.Tax__c) / 100 }"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!fw1__Recurring_Invoice__c.fw1__Shipping_And_Handling__c != 0 || fw1__Recurring_Invoice__c.fw1__Shipping_And_Handling__c != null}">
+                    <tr>
+                        <td colspan="7" style="padding: 4px;text-align: right;">Shipping and Handling</td>
+                        <td style="padding: 4px;text-align: right;">
+                            <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                            <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                                <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Shipping_And_Handling__c}"/> 
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:outputPanel>
+                <tr>
+                    <td colspan="7" style="padding: 4px;text-align: right;font-weight:bold;">Total</td>
+                    <td style="padding: 4px;text-align: right;font-weight:bold;">
+                        <apex:outputtext >{!emailCurrencySymbol}</apex:outputtext>
+                        <apex:outputText value="{0, number, ###,###,###,###,##0.00}"> 
+                            <apex:param value="{!fw1__Recurring_Invoice__c.fw1__Total_Invoice_Amount__c}"/> 
+                        </apex:outputText>
+                    </td>
+                </tr>
+                
+            </table>
+            <br/>
+        </td>
+    </tr>
+</table>
+
+<br/>
+
+<table width="100%">
+    <tr>
+        <td width="65%">
+            <apex:outputText style="white-space: pre" value="{!fw1__Recurring_Invoice__c.fw1__Terms_And_Conditions__c}"/>
+        </td>
+        <td style="text-align: center;font-size:14pt;color:blue;text-decoration:underline;vertical-align:top">
+            <!--<apex:outputLink rendered="{!Recurring_Invoice__c.Domain_Name__c != null}" value="https://{!Recurring_Invoice__c.Domain_Name__c}/WebPayments?scontrolCaching=1&id={!Recurring_Invoice__c.Id}" >Click here to pay online</apex:outputLink>-->
+            <apex:outputtext rendered="{!isDomainSet}">Click here to pay online</apex:outputtext>
+        </td>
+    </tr>
+</table>
+
+<br/><br/>
+
+Sincerely, <br/><br/>
+{!$User.CompanyName}<br/>
+{!$Organization.Street}<br/>
+{!$Organization.City},
+{!$Organization.State} 
+{!$Organization.PostalCode}<br/>
+{!$Organization.Country}<br/>
+{!$Organization.Phone}<br/>
+
+
+</body>
+</html>
+
+    
+</apex:page>

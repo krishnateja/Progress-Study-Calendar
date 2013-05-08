@@ -1,0 +1,1190 @@
+<apex:page standardController="Study__c" extensions="ProgressCalendar,AccountRemoter" sidebar="false">
+<style type="text/css">
+.menuDet {
+    float: left;
+    position: absolute;
+    margin-left: 37px;
+    margin-top: -28px;
+    font-weight:bold;
+}
+.menuSub {
+    float: left;
+    position: absolute;
+    margin-left: 263px;
+    margin-top: -28px;
+    font-weight:bold;
+}
+.middleMenuLeft {
+    float: left;
+    position: absolute;
+    margin-left: -550px;
+    margin-top: 9px;
+}
+.middleMenuRight {
+    float: left;
+    position: absolute;
+    margin-left: -55px;
+    margin-top: 9px;
+}
+.btSection {
+    float: left;
+    margin:10px 0px 0px 15px;
+}
+.btSection input {
+    float:left;
+    color:#000;
+    padding:4px 8px 4px 8px;
+    background: #d6eb93; /* Old browsers */
+    background: -moz-linear-gradient(top, #d6eb93 0%, #bfd686 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d6eb93), color-stop(100%, #bfd686)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #d6eb93 0%, #bfd686 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #d6eb93 0%, #bfd686 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #d6eb93 0%, #bfd686 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #d6eb93 0%, #bfd686 100%); /* W3C */
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6eb93', endColorstr='#bfd686', GradientType=0 ); /* IE6-9 */
+}
+.fetchGVal {
+    display:none;
+}
+.dataClass {
+    float:left;
+}
+.dataClass td {
+    float:left;
+    width:100px;
+    border:1px solid #ccc;
+    padding:5px 30px 0px 10px;
+}
+.dataClass th {
+    float:left;
+    width:100px;
+    border:1px solid #999;
+    padding:5px 30px 0px 10px;
+    background:#eff7c6;
+}
+.dataClass td:nth-child(2) {
+ width:200px !important;
+}
+.dataClass th:nth-child(2) {
+ width:200px !important;
+}
+.elementTable td, .dummyTable td, .insideTable td {
+    border:1px solid #ccc;
+}
+.whileColor td {
+    color:#fff;
+}
+.elementTable {
+    margin:20px 0px 20px 10px;
+}
+/*.insideTable td {
+    padding:10px;
+}*/
+.insideTable {
+    margin:20px 0px 20px 10px;
+}
+.recordIdValue {
+    visibility:hidden;
+}
+.recordSIdValue {
+    visibility:hidden;
+}
+.blackFont td {
+    height:50px;
+}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){ 
+        var globalVar;
+        var e =1;
+         
+        var recIdVal = document.getElementsByClassName('recordIdValue');
+        var recIdValue = recIdVal[0].innerHTML;
+        
+        var recSIdVal = document.getElementsByClassName('recordSIdValue');
+        var recSIdValue = recSIdVal[0].innerHTML;
+        
+        var radioVal = '4/29/2013';     
+        $('input:radio[name=a]').click(function() {
+            radioVal = $('input:radio[name=a]:checked').val();
+            radioVal = new Date(radioVal);
+        });
+       createTable();
+       
+       
+       $('.dataClass tr').each(function(){
+                  var mtr5 = $(this).find("td.cSet").text();
+                  var mtr6 = mtr5.replace("0","");
+                 
+                  if(mtr6 == 1){
+                      $(this).show();
+                  }
+                  else{
+                       $(this).hide();
+                        $(this).find("th").parent().show();
+                       
+                  }    
+              
+     });  
+       
+       
+       
+       
+       
+       var x = 0;
+       $('.dataClass tr').each(function(x){
+           var th = $(this).find("td.cSet").text();
+           this.className = th;  
+                           
+       
+       });
+       $('.innerElementTable td').mousedown(function(event) {
+            switch (event.which) {                
+                case 1:                     
+                    //console.log('---------------'+Client );                    
+                    $(this).append('<img src=\'/resource/1366273398000/dot\' alt=\'Dot\' />');                   
+                    break;
+                case 2:
+                    alert('Middle mouse button pressed');
+                    break;
+                case 3:                    
+                    $(this).append('<img src=\'/resource/1366273415000/arrow\' alt=\'Dot\' />');
+                    break;
+                default:
+                    alert('You have a strange mouse');
+            }
+            
+            
+            var Client = this.id;
+            //alert(Client);
+            /*var student = ''+{!s.Contact__c}+'';
+            var course = {!selCourse};
+            var subject = {!s.Subject__c};*/
+           
+            //var strUser = e.options[e.selectedIndex].text;
+            console.log('---Client ------'+Client );
+            console.log('---Client ------'+recIdVal[0] );
+            console.log('---Client ------'+e);
+           
+            AccountRemoter.getAccount( recSIdValue ,Client ,recIdValue,e,radioVal , function(result, event){
+                if (event.status){
+                    console.log('------------'+result);           
+                } 
+                }, {escape:true});
+            }); 
+      
+      
+      $('.selectDp').change(function() {
+          var option = this.options[this.selectedIndex];
+          var tSel = $(option).text();
+          e = tSel;
+          
+          $('.elementTable').hide();
+          if(tSel == "1"){
+              $(".insideTable").show();
+              $('#elementTable'+tSel).show();
+              
+              $('.dataClass tr').each(function(){
+                  var mtr5 = $(this).find("td.cSet").text();
+                  var mtr6 = mtr5.replace("0","");
+                  if(mtr6 == tSel){
+                      $(this).show();
+                  }
+                  else{
+                       $(this).hide();
+                       $(this).find("th").parent().show();
+                  }    
+              
+              });  
+          }
+          else{
+              $(".insideTable").hide();
+              var tSel2 = tSel - 1;
+              $('#elementTable'+tSel).show();
+              $('#elementTable'+tSel2).show();
+               
+               
+              $('.dataClass tr').each(function(){
+                  var mtr5 = $(this).find("td.cSet").text();
+                  var mtr6 = mtr5.replace("0","");
+                  if(mtr6 == tSel){
+                      $(this).show();
+                  }
+                  else{
+                       $(this).hide();
+                       $(this).find("th").parent().show();
+                  }    
+              
+              });              
+              
+          }
+        });
+     
+            
+        
+                 
+    }); 
+    
+    function createTable(){
+        
+        var tds1 = document.getElementsByClassName('pDate');
+        var cst1 = document.getElementsByClassName('cSet');
+        var arrUn1 = [];
+    
+     for (var m = 0; m < 1; m++) {
+         arrUn1.push(tds1[m].innerHTML);
+         for (var n = 0; n < tds1.length; n++) {
+             var tn = n + 1;
+             //console.log('----n---------' + tn);
+             if (n != tds1.length - 1) {
+                 if ((tds1[n].innerHTML != tds1[tn].innerHTML)) {
+                     arrUn1.push(tds1[tn].innerHTML);
+                 }
+             }
+         }
+     }  
+     
+     
+     var arrUn2 = [];
+    for (var mm = 0; mm < cst1.length; mm++) {
+        //console.log('--------11111111------');
+            if(mm==0){
+                    arrUn2.push(cst1 [m].innerHTML);
+             }
+            var tnm = mm + 1;
+            
+            if (mm != cst1 .length - 1) {
+                if ((cst1 [mm].innerHTML != cst1 [tnm].innerHTML)) {
+                    arrUn2.push(cst1 [tnm].innerHTML);
+                    //console.log('--------11111111------'+arrUn2);
+                }
+            }else{
+                if (arrUn2.indexOf(cst1 [mm].innerHTML) > -1) {
+                   
+                }
+                else {                
+                    arrUn2.push(cst1 [mm].innerHTML);
+                }
+            
+            }
+            globalVar = arrUn2.length;
+            //console.log('------arrUn2-----createTable--' + arrUn2);
+        }
+       
+      
+     var trCount = 0 ;
+     var tText = [];
+    for (var p=1;p<=arrUn2.length;p++){
+           trCount = 0;
+           var tText = new Array();
+           $('.pDate').each(function(){
+                var tL = $(this).next().next().text();
+                if(tL == p){                  
+                  tText.push($(this).text());                  
+                }                
+           });
+           
+           for(var b= 1; b<tText.length;b++){
+               var s = new Date(tText[b]);
+               var u = new Date(tText[b-1]);
+               var diff5 = s-u;
+              
+               if(diff5 != 0){
+                   trCount = trCount + 1;
+               }
+           
+           }
+          
+            
+            var tCreate = document.createElement('table');
+            tCreate.id = "elementTable"+p;
+            tCreate.className = "elementTable";
+            tCreate.cellPadding = '0';
+            tCreate.cellSpacing = '0';
+          
+            
+            var trCreate2 = document.createElement('tr');
+            var tdCreate2 = document.createElement('td');
+            tdCreate2.setAttribute("colspan","20" );
+            var div1 = document.createElement('div');
+            div1.style.height = "150px";
+            div1.style.overflowY = "scroll";
+            
+            var tCreate2 = document.createElement('table');
+            tCreate2.className = "innerElementTable";
+            //tCreate2.cellPadding = "5";
+            tCreate2.cellSpacing = "0";
+            
+            
+            
+             var thCreate = document.createElement('tr');
+            thCreate.bgColor = "#eff7c6"; 
+            thCreate.className = "blackFont";
+            
+            var tInner = "<td  style='background-color:#eff7c6;color:#eff7c6 !important;' width='15' >6</td> <td colspan='4' width='60' >Writing Numbers</td><td colspan='2' width='30'>Learning Numbers</td><td colspan='3' width='45'>Practicing Numbers</td><td colspan='2' width='30'>Learning Numbers</td><td colspan='7' width='75'>Practicing Numbers upto 10</td>";
+            thCreate.innerHTML = tInner;
+            tCreate2.appendChild(thCreate);
+            
+            
+            
+            var th1Create = document.createElement('tr');
+            th1Create.bgColor = "#eff7c6";  
+           
+            
+            var tInner1 = "<td  style='background-color:#eff7c6;color:#eff7c6;' width='25' height='25'>6</td><td width='25' height='25'>1</td><td width='25' height='25' >2</td><td width='25' height='25' >3</td><td width='25' height='25' >4</td><td width='25' height='25' >5</td><td width='25' height='25' >6</td><td width='25' height='25' >7</td><td width='25' height='25' >8</td><td width='25' height='25'>9</td><td width='25' height='25' >10</td><td width='25' height='25' >11</td><td width='25' height='25' >12</td><td width='25' height='25'  >13</td><td width='25' height='25' >14</td><td width='25' height='25'>15</td><td width='25' height='25' >16</td><td width='25' height='25' >17</td><td width='25' height='25' >18</td> ";
+            th1Create.innerHTML = tInner1;
+            tCreate2.appendChild(th1Create); 
+            
+            
+            for (var i=0;i<=trCount+1;i++){
+                   var trCreate = document.createElement('tr');
+                   var greenTd = document.createElement('td');
+                   greenTd.width ="25";
+                   greenTd.height ="25";
+                   greenTd.bgColor = "#eff7c6";
+                   greenTd.color = "#eff7c6";
+                   trCreate.appendChild(greenTd);
+                   for(var j=1;j<=18;j++){
+                           
+                           var incI = i+1;
+                           if(j<=9){                       
+                               incI = p+''+incI+'0'+j;
+                           }else{
+                               incI = p+''+incI+''+j;
+                           }
+                           var tdCreate = document.createElement('td');
+                           tdCreate.width ="25";
+                           tdCreate.height ="25";
+                           tdCreate.color = "#ffffff";
+                           //tdCreate.innerHTML = j;
+                           tdCreate.setAttribute('class',incI);
+                           tdCreate.id = j;
+                           //console.log('---------'+tdCreate.innerHTML = j);
+                           //tdCreate.setAttribute('value',j);                          
+                           trCreate.appendChild(tdCreate);
+                   }
+                   /*var tdSpare = document.createElement('td');
+                   tdSpare.width="25";
+                   tdSpare.height="25";
+                   trCreate.appendChild(tdSpare);*/
+                   tCreate2.appendChild(trCreate);
+                   
+            }
+            div1.appendChild(tCreate2);
+            tdCreate2.appendChild(div1);
+            trCreate2.appendChild(tdCreate2);
+            
+            
+            var tWhite = document.createElement('td');
+            tWhite.width = "100";
+            tWhite.style.border = "1px solid #fff";
+            trCreate2.appendChild(tWhite);
+            
+            var tdCreate3 = document.createElement('td');
+            tdCreate3.setAttribute("colspan","12" );
+            var div1 = document.createElement('div');
+            div1.style.height = "150px";
+            div1.style.overflowY = "scroll";
+            
+            var tCreate3 = document.createElement('table');
+            tCreate3.className = "innerElementTable";
+            //tCreate3.cellPadding = "5";
+            tCreate3.cellSpacing = "0";
+            
+             var thCreate = document.createElement('tr');
+            thCreate.bgColor = "#eff7c6"; 
+            thCreate.className = "blackFont";
+            
+            var tInner = "<td colspan='4' width='60'>Repeating Pattern</td><td colspan='2' width='30'>Recognization</td><td colspan='2' width='30'>Drawing</td><td colspan='2' width='30'>Drawing</td><td width='15' >Cor</td><td width='15' >Mat</td>";
+            thCreate.innerHTML = tInner;
+            tCreate3.appendChild(thCreate);
+            
+            
+            var th1Create = document.createElement('tr');
+            th1Create.bgColor = "#eff7c6";  
+           
+            
+            var tInner1 = "<td width='25' height='25' >19</td><td width='25' height='25' >20</td><td width='25' height='25' >21</td><td width='25' height='25' >22</td>  <td width='25' height='25' >23</td><td width='25' height='25'>24</td><td width='25' height='25'>25</td><td width='25' height='25' >26</td><td width='25' height='25' >27</td><td width='25' height='25' >28</td><td width='25' height='25' >29</td> <td width='25' height='25'>30</td>";
+            th1Create.innerHTML = tInner1;
+            tCreate3.appendChild(th1Create); 
+            
+            
+            for (var i=0;i<=trCount+1;i++){
+                   var trCreate = document.createElement('tr');
+                  /* var greenTd = document.createElement('td');                  
+                   greenTd.bgColor = "#eff7c6";
+                   greenTd.color = "#eff7c6";
+                   trCreate.appendChild(greenTd);*/
+                   
+                   for(var j=19;j<=30;j++){
+                           var incI = i+1;
+                          
+                           var incIId = p+''+incI+''+j;                          
+                           var tdCreate = document.createElement('td');
+                           tdCreate.width ="25";
+                           tdCreate.height ="25";
+                           tdCreate.color = "#ffffff";
+                           tdCreate.id = j;
+                        
+                           tdCreate.setAttribute('class',incIId);                           
+                           trCreate.appendChild(tdCreate);
+                   } 
+                  /* var tdSpare1 = document.createElement('td');
+                   tdSpare1.width="25";
+                   tdSpare1.height="25";
+                   trCreate.appendChild(tdSpare1);*/
+                   tCreate3.appendChild(trCreate);
+                   
+            }
+            div1.appendChild(tCreate3);
+            tdCreate3.appendChild(div1);
+            trCreate2.appendChild(tdCreate3);
+            
+            
+            tCreate.appendChild(trCreate2);
+            
+            
+            var divAdd = document.getElementById('tableClassDiv');
+            divAdd.appendChild(tCreate);
+         
+      }
+         $('.elementTable').hide();
+         $(".insideTable").show();
+         $('#elementTable1').show();
+              
+ }
+   
+function changeBckColor4Neg(){
+ var tds = document.getElementsByClassName('pDate');
+ var pst = document.getElementsByClassName('pSet');
+ var cst1 = document.getElementsByClassName('cSet');
+ var arr = [];
+ var arrUn = [];
+ 
+
+ for (var m = 0; m < 1; m++) {
+     arrUn.push(tds[m].innerHTML);
+     for (var n = 0; n < tds.length; n++) {
+         var tn = n + 1;
+         //console.log('----n---------' + tn);
+         if (n != tds.length - 1) {
+             if ((tds[m].innerHTML != tds[tn].innerHTML)) {
+                 arrUn.push(tds[tn].innerHTML);
+             }
+         }
+     }
+ }
+ //console.log('------arrUn-------' + arrUn);
+ //console.log('------arrUn-------' + arrUn.length);
+
+ for (var j = 0; j < arrUn.length; j++) {
+     if (j == 0) {
+         arr.push(pst[j].innerHTML);
+     }
+     for (var k = 0; k < pst.length; k++) {
+
+         var tk = k + 1;
+         if (k != tds.length - 1) {
+
+             if (arrUn[j] == tds[tk].innerHTML) {
+                 arr.push(pst[tk].innerHTML);
+             }
+         }
+     }
+ }
+
+ //console.log('-----------arr------------' + arr);
+
+ 
+
+ //map[myKey1] == get(myKey1);
+
+
+
+ var today = new Date();
+ var dd = today.getDate();
+
+    /* for(var i=0;i< tds.length;i++){
+                var check = dd+7; 
+                var dynaPlace;               
+                
+                var dt = new Date(tds[i].innerHTML);
+                dynaPlace = dt.getDate();
+                            
+                
+               if(dt <= today )
+                    $('.'+(i+1)+dynaPlace ).append('<img src=\'/resource/1366284604000/pHistory\' alt=\'Dot\' />');
+                else if(dt.getDate() >= dd && dt.getDate() <= check)
+                    $('.'+(i+1)+dynaPlace ).append('<img src=\'/resource/1366284628000/wProgress\' alt=\'Dot\' />');
+                else    
+                    $('.'+i+dt).append('<img src=\'/resource/1366291765000/determined\' alt=\'Dot\' />');
+       
+            }*/
+            
+   var diff, diff2;
+     var j = 1;
+     var l = pst.length;
+     var t = l-1;
+     var k = 1 ;
+
+ for (var i = 0; i < pst.length; i++) {
+    
+      
+      
+    
+     if (i == l - 1) {
+         var dynaPointer3 = decideColorArrow(tds[i].innerHTML,2);
+         //$("." + k + pst[i].innerHTML).append('<img src=\'/resource/1366614722000/pHistory\' alt=\'Dot\' />');
+         $("." + k + pst[i].innerHTML).append('<img src=\'/resource/'+dynaPointer3 +'\' alt=\'Dot\' />');
+
+     } else {
+        
+         var dt1 = new Date(tds[i + 1].innerHTML);
+         var dt2 = new Date(tds[i].innerHTML);
+         diff2 = dt1 - dt2;
+         
+           if (diff2 == 0) {
+             
+                 j = j;
+                
+                 diff = pst[i + 1].innerHTML - pst[i].innerHTML;
+                 if (diff > 1) {
+                     
+                     var dynaPointer2 = decideColorArrow(tds[i].innerHTML,2);
+                    
+                     $('.' + j+ pst[i].innerHTML).append('<img src=\'/resource/'+dynaPointer+'\' alt=\'Dot\' />');
+                 } else {
+                     var dynaPointer1 = decideColorArrow(tds[i].innerHTML,1);
+                     $('.' +  j + pst[i].innerHTML).append('<img src=\'/resource/'+dynaPointer1 +'\' alt=\'Dot\' />');
+                 }
+                 
+            
+             } else {
+                              
+                  
+                  diff = pst[i + 1].innerHTML - pst[i].innerHTML;
+                  if (diff > 1) {
+                     var dynaPointer2 = decideColorArrow(tds[i].innerHTML,2);
+                     $('.' + j + pst[i].innerHTML).append('<img src=\'/resource/'+dynaPointer2 +'\' alt=\'Dot\' />');
+                 } else {
+                     var dynaPointer1 = decideColorArrow(tds[i].innerHTML,1);
+                     $('.' + j + pst[i].innerHTML).append('<img src=\'/resource/'+dynaPointer1 +'\' alt=\'Dot\' />');
+                 }
+                 
+                  j = j + 1; 
+                  
+                  k = j;
+         }
+     }
+        
+    }
+
+
+            
+            
+    }
+    function get(p) {
+     return map[p];
+ }
+  function updateArrows(){
+       
+         var pst = document.getElementsByClassName('pSet');
+           var trCount = 1,checkFlag;
+           var mtr2,mtr,mtr1,mtr3,mtr4;
+           var tText = [];
+        for (var p=1;p<=globalVar;p++){   
+         checkFlag =0;
+         var checkLoop=1;
+        $('.pDate').each(function(){
+                 //trCount = 0; 
+                 mtr1 = $(this).next().next().next().text();  
+                 mtr11 = $(this).closest('tr').next('tr').text();
+                 mtr11 = mtr11.substr(mtr11.length-2,mtr11.length);
+                 mtr4 =  $(this).closest('tr').next('tr').text();
+                 mtr4 = mtr4.substr(0,10)     ;
+                 mtr3 =  $(this).text();          
+                 mtr = $(this).next().next().text();
+                 mtr2 = mtr.replace("0","");
+                  
+                 var nNewDate1 = new Date(mtr3);
+                 var nNewDate2 = new Date(mtr4);
+                 var diffNewDate = nNewDate2 -nNewDate1;
+                 //alert('------diffNewDate----'+diffNewDate );
+                 if(checkFlag  == 1){
+                     trCount = trCount+1;
+                     checkFlag  =0;
+                 }
+                 if(mtr2 != p){
+                   trCount = 0;
+                }
+                 if(diffNewDate == 0){
+                        if(checkLoop == pst.length){
+                            var dynaPointer3 = decideColorArrow($(this).text(),2);
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer3 +'\' alt=\'Dot\' />');
+                        }else{
+                         diff = mtr11 - mtr1;
+                         if (diff > 1) {
+                             
+                             var dynaPointer2 = decideColorArrow($(this).text(),2);
+                            
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer+'\' alt=\'Dot\' />');
+                         } else {
+                             var dynaPointer1 = decideColorArrow($(this).text(),1);
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer1 +'\' alt=\'Dot\' />');
+                        }
+                    }
+                 }else{
+                     checkFlag = 1;
+                     diff = mtr11 - mtr1;
+                     if(checkLoop == pst.length){
+                            var dynaPointer3 = decideColorArrow($(this).text(),2);
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer3 +'\' alt=\'Dot\' />');
+                     }else{
+                        
+                     
+                          if (diff > 1) {
+                             var dynaPointer2 = decideColorArrow($(this).text(),2);
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer2 +'\' alt=\'Dot\' />');
+                             
+                         } else {
+                             var dynaPointer1 = decideColorArrow($(this).text(),1);
+                             $("." + mtr2 + trCount+ mtr1).append('<img src=\'/resource/'+dynaPointer1 +'\' alt=\'Dot\' />');
+                             console.log("." + mtr2 + trCount+ mtr1+'-----------------------'+diff);
+                         }
+                      }   
+                          
+                 }
+                 
+                 //alert(mtr2+trCount+mtr1);    
+                 
+                
+                //$("."+mtr2+trCount+mtr1).append('<img src=\'/resource/1366654667000/pHistory2\' alt=\'Dot\' />'); 
+                
+            checkLoop = checkLoop +1;    
+           }); 
+          
+       }   
+        
+        
+      
+  }
+    
+    
+    
+    
+    
+    function decideColorArrow(dateInFun,loopFlag){
+        
+        var funDyanmicPointer;
+        var dynaPlace;
+        
+        var today = new Date();
+        var dd = today.getDate();
+        var check = dd+7; 
+              
+        var dt = new Date(dateInFun);
+        dynaPlace = dt.getDate();
+        if(loopFlag ==1 ){          
+            if(dt <= today )
+                funDyanmicPointer = '1366614722000/pHistory' ;
+            else if(dt.getDate() >= dd && dt.getDate() <= check)
+                funDyanmicPointer = '1366653266000/wProgress1';
+            else    
+                funDyanmicPointer = '/s.gif';
+        }else if(loopFlag ==2){
+            if(dt <= today )
+                funDyanmicPointer = '1366654667000/pHistory2' ;
+            else if(dt.getDate() >= dd && dt.getDate() <= check)
+                funDyanmicPointer = '1366655554000/wProgress2';
+            else    
+
+                funDyanmicPointer = '/s.gif';
+        }    
+        return funDyanmicPointer ;    
+    }    
+     
+    </script>
+<body >
+<!-- oncontextmenu="return false;" -->
+<apex:image value="{!IF (s.Class__c  == 'Mon', $Resource.Mon, '/s.gif'  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Tue', $Resource.Mon, $Resource.Tue  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Wed', $Resource.Mon, $Resource.Wed  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Thu', $Resource.Mon, $Resource.Thu )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Fri', $Resource.Mon, $Resource.Fri  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Sat', $Resource.Mon, $Resource.Sat  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'Sun', $Resource.Mon, $Resource.Sun  )}"/>
+<apex:image value="{!IF (s.Class__c  == 'All', $Resource.Mon, $Resource.All  )}"/>
+<apex:image value="{!$Resource.menu}"/>
+<div class="menuDet">
+  <apex:outputText >{!s.Contact__r.name}</apex:outputText>
+</div>
+<div class="menuSub">
+  <apex:outputText >{!s.Subject__r.name}</apex:outputText>
+  <apex:outputText styleClass="recordIdValue" value="{!s.Subject__c}" />
+  <apex:outputText styleClass="recordSIdValue" value="{!id}"/>
+</div>
+<apex:dataTable value="{!p}" var="pp" styleClass="dataClass">
+  <apex:column styleClass="pDate" headerValue="DATE">
+    <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+      <apex:param value="{!pp.ProgressDate__c }"/>
+    </apex:outputText>
+  </apex:column>
+  <apex:column styleClass="subjClass" headerValue="SET NAME" >
+    <apex:outputText value="{!pp.Subject__r.name }" />
+  </apex:column>
+  <apex:column headerValue="COURSE" styleClass="cSet">
+    <apex:outputText value="{!pp.Course__r.name}" />
+  </apex:column>
+  <apex:column styleClass="pSet" headerValue="SET">
+    <apex:outputText value="{!pp.Set__r.name}" />
+  </apex:column>
+</apex:dataTable>
+<span class="btSection">
+<input type="button" value="Progress Print" />
+<input type="button" value="Date" onClick="updateArrows();" />
+</span>
+<apex:image value="{!$Resource.middleMenu}"/>
+<span class="middleMenuLeft">
+<apex:form >
+  <apex:selectlist value="{!selCourse}" size="1" >
+    <apex:selectOptions value="{!items}"/>
+  </apex:selectlist>
+</apex:form>
+</span > <span class="middleMenuRight">
+<apex:form >
+  <apex:selectlist value="{!selCourse}" size="1" styleClass="selectDp">
+    <apex:selectOptions value="{!items}"/>
+  </apex:selectlist>
+</apex:form>
+</span >
+<!--<table width="200" border="0" cellpadding="5" cellspacing="0" class="insideTable">
+  <tr style="background-color:#fff"  class="whileColor">
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">&nbsp;</td>
+    <td colspan="4" width="60" >Writing Numbers</td>
+    <td colspan="2" width="30">Learning Numbers</td>
+    <td colspan="3" width="45">Practicing Numbers</td>
+    <td colspan="2" width="30">Learning Numbers</td>
+    <td colspan="7" width="75">Practicing Numbers upto 10</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td colspan="4" width="60">Repeating Pattern</td>
+    <td colspan="2" width="30">Recogniziation</td>
+    <td colspan="2" width="30">Drawing</td>
+    <td colspan="2" width="30">Drawing</td>
+    <td width="40" height="25" >Cor</td>
+    <td width="40" height="25" >Mat</td>
+  </tr>
+  <tr style="background-color:#eff7c6" >
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">1</td>
+    <td width="40" height="25"  >1</td>
+    <td width="40" height="25" >2</td>
+    <td width="40" height="25" >3</td>
+    <td width="40" height="25" >4</td>
+    <td width="40" height="25" >5</td>
+    <td width="40" height="25" >6</td>
+    <td width="40" height="25" >7</td>
+    <td width="40" height="25" >8</td>
+    <td width="40" height="25" >9</td>
+    <td width="40" height="25" >10</td>
+    <td width="40" height="25" >11</td>
+    <td width="40" height="25" >12</td>
+    <td width="40" height="25" >13</td>
+    <td width="40" height="25" >14</td>
+    <td width="40" height="25" >15</td>
+    <td width="40" height="25" >16</td>
+    <td width="40" height="25" >17</td>
+    <td width="40" height="25" >18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+  <tr>
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">3</td>
+    <td width="40" height="25">1</td>
+    <td width="40" height="25">2</td>
+    <td width="40" height="25">3</td>
+    <td width="40" height="25">4</td>
+    <td width="40" height="25">5</td>
+    <td width="40" height="25">6</td>
+    <td width="40" height="25">7</td>
+    <td width="40" height="25">8</td>
+    <td width="40" height="25">9</td>
+    <td width="40" height="25">10</td>
+    <td width="40" height="25">11</td>
+    <td width="40" height="25">12</td>
+    <td width="40" height="25">13</td>
+    <td width="40" height="25">14</td>
+    <td width="40" height="25">15</td>
+    <td width="40" height="25">16</td>
+    <td width="40" height="25">17</td>
+    <td width="40" height="25">18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+  <tr>
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">4</td>
+    <td width="40" height="25">1</td>
+    <td width="40" height="25">2</td>
+    <td width="40" height="25">3</td>
+    <td width="40" height="25">4</td>
+    <td width="40" height="25">5</td>
+    <td width="40" height="25">6</td>
+    <td width="40" height="25">7</td>
+    <td width="40" height="25">8</td>
+    <td width="40" height="25">9</td>
+    <td width="40" height="25">10</td>
+    <td width="40" height="25">11</td>
+    <td width="40" height="25">12</td>
+    <td width="40" height="25">13</td>
+    <td width="40" height="25">14</td>
+    <td width="40" height="25">15</td>
+    <td width="40" height="25">16</td>
+    <td width="40" height="25">17</td>
+    <td width="40" height="25">18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+  <tr>
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">5</td>
+    <td width="40" height="25"  >1</td>
+    <td width="40" height="25" >2</td>
+    <td width="40" height="25">3</td>
+    <td width="40" height="25">4</td>
+    <td width="40" height="25">5</td>
+    <td width="40" height="25">6</td>
+    <td width="40" height="25">7</td>
+    <td width="40" height="25">8</td>
+    <td width="40" height="25">9</td>
+    <td width="40" height="25">10</td>
+    <td width="40" height="25">11</td>
+    <td width="40" height="25">12</td>
+    <td width="40" height="25">13</td>
+    <td width="40" height="25">14</td>
+    <td width="40" height="25">15</td>
+    <td width="40" height="25">16</td>
+    <td width="40" height="25">17</td>
+    <td width="40" height="25">18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+  <tr>
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">6</td>
+    <td width="40" height="25">1</td>
+    <td width="40" height="25">2</td>
+    <td width="40" height="25">3</td>
+    <td width="40" height="25">4</td>
+    <td width="40" height="25">5</td>
+    <td width="40" height="25">6</td>
+    <td width="40" height="25">7</td>
+    <td width="40" height="25">8</td>
+    <td width="40" height="25">9</td>
+    <td width="40" height="25">10</td>
+    <td width="40" height="25">11</td>
+    <td width="40" height="25">12</td>
+    <td width="40" height="25">13</td>
+    <td width="40" height="25">14</td>
+    <td width="40" height="25">15</td>
+    <td width="40" height="25">16</td>
+    <td width="40" height="25">17</td>
+    <td width="40" height="25">18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+  <tr>
+    <td style="background-color:#eff7c6;color:#eff7c6;" width="40" height="25">7</td>
+    <td width="40" height="25">1</td>
+    <td width="40" height="25">2</td>
+    <td width="40" height="25">3</td>
+    <td width="40" height="25">4</td>
+    <td width="40" height="25">5</td>
+    <td width="40" height="25">6</td>
+    <td width="40" height="25">7</td>
+    <td width="40" height="25">8</td>
+    <td width="40" height="25">9</td>
+    <td width="40" height="25">10</td>
+    <td width="40" height="25">11</td>
+    <td width="40" height="25">12</td>
+    <td width="40" height="25">13</td>
+    <td width="40" height="25">14</td>
+    <td width="40" height="25">15</td>
+    <td width="40" height="25">16</td>
+    <td width="40" height="25">17</td>
+    <td width="40" height="25">18</td>
+    <td style="float:left;width:100px;border:none !important;">&nbsp;</td>
+    <td width="40" height="25" >19</td>
+    <td width="40" height="25" >20</td>
+    <td width="40" height="25" >21</td>
+    <td width="40" height="25" >22</td>
+    <td width="40" height="25" >23</td>
+    <td width="40" height="25" >24</td>
+    <td width="40" height="25" >25</td>
+    <td width="40" height="25" >26</td>
+    <td width="40" height="25" >27</td>
+    <td width="40" height="25" >28</td>
+    <td width="40" height="25" >29</td>
+    <td width="40" height="25" >30</td>
+  </tr>
+</table>-->
+<table id="" class="insideTable" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td colspan="20"><div style="height: 150px; overflow-y: scroll;">
+        <table class="" cellspacing="0">
+          <tr bgcolor="#eff7c6" class="blackFont">
+            <td style="background-color:#eff7c6;color:#eff7c6 !important;" width="15">6</td>
+            <td colspan="4" width="60">Writing Numbers</td>
+            <td colspan="2" width="30">Learning Numbers</td>
+            <td colspan="3" width="45">Practicing Numbers</td>
+            <td colspan="2" width="30">Learning Numbers</td>
+            <td colspan="7" width="75">Practicing Numbers upto 10</td>
+          </tr>
+          <tr bgcolor="#eff7c6">
+            <td style="background-color:#eff7c6;color:#eff7c6;" width="25" height="25">6</td>
+            <td width="25" height="25">1</td>
+            <td width="25" height="25">2</td>
+            <td width="25" height="25">3</td>
+            <td width="25" height="25">4</td>
+            <td width="25" height="25">5</td>
+            <td width="25" height="25">6</td>
+            <td width="25" height="25">7</td>
+            <td width="25" height="25">8</td>
+            <td width="25" height="25">9</td>
+            <td width="25" height="25">10</td>
+            <td width="25" height="25">11</td>
+            <td width="25" height="25">12</td>
+            <td width="25" height="25">13</td>
+            <td width="25" height="25">14</td>
+            <td width="25" height="25">15</td>
+            <td width="25" height="25">16</td>
+            <td width="25" height="25">17</td>
+            <td width="25" height="25">18</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" bgcolor="#eff7c6"></td>
+            <td width="25" height="25" >1</td>
+            <td width="25" height="25" >2</td>
+            <td width="25" height="25" >3</td>
+            <td width="25" height="25" >4</td>
+            <td width="25" height="25" >5</td>
+            <td width="25" height="25" >6</td>
+            <td width="25" height="25" >7</td>
+            <td width="25" height="25" >8</td>
+            <td width="25" height="25" >9</td>
+            <td width="25" height="25" >10</td>
+            <td width="25" height="25" >11</td>
+            <td width="25" height="25" >12</td>
+            <td width="25" height="25" >13</td>
+            <td width="25" height="25" >14</td>
+            <td width="25" height="25" >15</td>
+            <td width="25" height="25" >16</td>
+            <td width="25" height="25" >17</td>
+            <td width="25" height="25" >18</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" bgcolor="#eff7c6"></td>
+             <td width="25" height="25" >1</td>
+            <td width="25" height="25" >2</td>
+            <td width="25" height="25" >3</td>
+            <td width="25" height="25" >4</td>
+            <td width="25" height="25" >5</td>
+            <td width="25" height="25" >6</td>
+            <td width="25" height="25" >7</td>
+            <td width="25" height="25" >8</td>
+            <td width="25" height="25" >9</td>
+            <td width="25" height="25" >10</td>
+            <td width="25" height="25" >11</td>
+            <td width="25" height="25" >12</td>
+            <td width="25" height="25" >13</td>
+            <td width="25" height="25" >14</td>
+            <td width="25" height="25" >15</td>
+            <td width="25" height="25" >16</td>
+            <td width="25" height="25" >17</td>
+            <td width="25" height="25" >18</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" bgcolor="#eff7c6"></td>
+             <td width="25" height="25" >1</td>
+            <td width="25" height="25" >2</td>
+            <td width="25" height="25" >3</td>
+            <td width="25" height="25" >4</td>
+            <td width="25" height="25" >5</td>
+            <td width="25" height="25" >6</td>
+            <td width="25" height="25" >7</td>
+            <td width="25" height="25" >8</td>
+            <td width="25" height="25" >9</td>
+            <td width="25" height="25" >10</td>
+            <td width="25" height="25" >11</td>
+            <td width="25" height="25" >12</td>
+            <td width="25" height="25" >13</td>
+            <td width="25" height="25" >14</td>
+            <td width="25" height="25" >15</td>
+            <td width="25" height="25" >16</td>
+            <td width="25" height="25" >17</td>
+            <td width="25" height="25" >18</td>
+          </tr>
+        </table>
+      </div></td>
+    <td width="100" style="border: 1px solid rgb(255, 255, 255);"></td>
+    <td colspan="12"><div style="height: 150px; overflow-y: scroll;">
+        <table class="" cellspacing="0">
+          <tr bgcolor="#eff7c6" class="blackFont">
+            <td colspan="4" width="60">Repeating Pattern</td>
+            <td colspan="2" width="30">Recognization</td>
+            <td colspan="2" width="30">Drawing</td>
+            <td colspan="2" width="30">Drawing</td>
+            <td width="15">Cor</td>
+            <td width="15">Mat</td>
+          </tr>
+          <tr bgcolor="#eff7c6">
+            <td width="25" height="25">19</td>
+            <td width="25" height="25">20</td>
+            <td width="25" height="25">21</td>
+            <td width="25" height="25">22</td>
+            <td width="25" height="25">23</td>
+            <td width="25" height="25">24</td>
+            <td width="25" height="25">25</td>
+            <td width="25" height="25">26</td>
+            <td width="25" height="25">27</td>
+            <td width="25" height="25">28</td>
+            <td width="25" height="25">29</td>
+            <td width="25" height="25">30</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" >19</td>
+            <td width="25" height="25" >20</td>
+            <td width="25" height="25" >21</td>
+            <td width="25" height="25" >22</td>
+            <td width="25" height="25" >23</td>
+            <td width="25" height="25" >24</td>
+            <td width="25" height="25" >25</td>
+            <td width="25" height="25" >26</td>
+            <td width="25" height="25" >27</td>
+            <td width="25" height="25" >28</td>
+            <td width="25" height="25" >29</td>
+            <td width="25" height="25" >30</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" >19</td>
+            <td width="25" height="25" >20</td>
+            <td width="25" height="25" >21</td>
+            <td width="25" height="25" >22</td>
+            <td width="25" height="25" >23</td>
+            <td width="25" height="25" >24</td>
+            <td width="25" height="25" >25</td>
+            <td width="25" height="25" >26</td>
+            <td width="25" height="25" >27</td>
+            <td width="25" height="25" >28</td>
+            <td width="25" height="25" >29</td>
+            <td width="25" height="25" >30</td>
+          </tr>
+          <tr>
+            <td width="25" height="25" >19</td>
+            <td width="25" height="25" >20</td>
+            <td width="25" height="25" >21</td>
+            <td width="25" height="25" >22</td>
+            <td width="25" height="25" >23</td>
+            <td width="25" height="25" >24</td>
+            <td width="25" height="25" >25</td>
+            <td width="25" height="25" >26</td>
+            <td width="25" height="25" >27</td>
+            <td width="25" height="25" >28</td>
+            <td width="25" height="25" >29</td>
+            <td width="25" height="25" >30</td>
+          </tr>
+        </table>
+      </div></td>
+  </tr>
+</table>
+<div id="tableClassDiv" ></div>
+<div id="conditionalHL">&nbsp;</div>
+<apex:form >
+  <table width="948" height="30" background="{!$Resource.footmenu}" border="0" cellpadding="3" cellspacing="0" >
+    <td width="23">&nbsp;</td>
+      <td><font color="blue">
+        <h1>Study Day</h1>
+        </font></td>
+      <td><input name="a" type="radio" value="4/29/2013" id="dateSelected"  checked="checked"/>
+        <b><font color="red">04/29(Mon)</font></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="a" type="radio" value="5/06/2013" id="dateSelected" />
+        05/06(Mon)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="a" type="radio" value="5/13/2013" id="dateSelected"  />
+        05/13(Mon)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="a" type="radio" value="5/30/2013" id="dateSelected" />
+        05/30(Mon) </td>
+  </table>
+</apex:form>
+<br>
+</br>
+<apex:form id="namefrm">
+  <table width="948" height="31" border="0" cellpadding="5" cellspacing="0" >
+    <td width="400">&nbsp;</td>
+      <td width="150"><img src="{!$Resource.btn_prev}"></img>&nbsp;<img src="{!$Resource.btn_next}"></img></td>
+      <td width="70">&nbsp;</td>
+      <td><!-- <apex:actionFunction action="{!saveCourse}" name="goSaveCourse" >
+        </apex:actionFunction> -->
+        <img src="{!$Resource.btn_confirm}" onclick="var rval = goSaveCourse();"/> &nbsp;<img src="{!$Resource.btn_confirm_next}"></img>&nbsp;<img src="{!$Resource.btn_close}"></img></td>
+  </table>
+</apex:form>
+<apex:image value="{!$Resource.Footer_new}"/>
+<apex:form >
+  <apex:actionFunction name="doStuff" action="{!doStuff}">
+    <apex:param name="somevariable" value="" assignTo="{!somevariable}" />
+  </apex:actionFunction>
+</apex:form>
+</body>
+</apex:page>

@@ -1,0 +1,75 @@
+<messaging:emailTemplate subject="{!Relatedto.fw1__Payment_Receipt_Email_Subject__c}" recipientType="Contact" relatedToType="fw1__Payment__c">
+
+<messaging:htmlEmailBody >
+<html>
+
+<body>
+<br/>
+<apex:outputText rendered="{!Relatedto.Invoice__r.fw1__Recipient_Name__c != null}">
+    Dear {!Relatedto.Invoice__r.fw1__Recipient_Name__c},
+    <br/>
+</apex:outputText>
+<br/>
+
+<apex:outputText style="white-space: pre" value="{!Relatedto.fw1__Payment_Receipt_Email_Message__c}"/>
+<br/><br/>
+
+<table>
+    <tr>
+        <td style="padding: 2px;font-weight:bold;" align="right">Amount :</td>
+        <td style="padding: 2px;">
+            <apex:outputtext >{!Relatedto.fw1__Email_Currency_Symbol__c}</apex:outputtext>
+            <apex:outputText value="{0, number, ###,###,###,###,##0.00}">
+                <apex:param value="{!Relatedto.fw1__Amount__c}"/>
+            </apex:outputText>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 2px;font-weight:bold;" align="right">Payment Date :</td>
+        <td style="padding: 2px;">
+            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                <apex:param value="{!Relatedto.fw1__Payment_Date__c}" /> 
+            </apex:outputText>
+        </td>
+    </tr>
+    <apex:outputPanel rendered="{!Relatedto.fw1__Payment_Method__c == 'Credit Card'}">
+        <tr>
+            <td style="padding: 2px;font-weight:bold;" align="right">Credit Card :</td>
+            <td style="padding: 2px;">{!Relatedto.Credit_Card_Number__c}</td>
+        </tr>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!Relatedto.fw1__Payment_Method__c == 'eCheck'}">
+        <tr>
+            <td style="padding: 2px;font-weight:bold;" align="right">Account Number :</td>
+            <td style="padding: 2px;">{!Relatedto.Bank_Account_Number__c}</td>
+        </tr>
+    </apex:outputPanel>
+    <tr>
+        <td style="padding: 2px;font-weight:bold;" align="right">Reference :</td>
+        <td style="padding: 2px;">{!Relatedto.Name}</td>
+    </tr>
+</table>
+
+<!-- DISPLAY INVOICE LINES -->
+<!-- <c:InvoiceLines invId="{!Relatedto.Invoice__c}" /> -->
+
+<br/>
+
+Sincerely, <br/><br/>
+{!$User.CompanyName}<br/>
+{!$Organization.Street}<br/>
+{!$Organization.City},
+{!$Organization.State} 
+{!$Organization.PostalCode}<br/>
+{!$Organization.Country}<br/>
+{!$Organization.Phone}<br/>
+
+<br/><br/>
+<apex:outputText style="font-style:italic;white-space: pre" value="{!Relatedto.fw1__Email_Footer__c}"/>
+<br/>
+
+</body>
+</html>
+</messaging:htmlEmailBody>
+
+</messaging:emailTemplate>

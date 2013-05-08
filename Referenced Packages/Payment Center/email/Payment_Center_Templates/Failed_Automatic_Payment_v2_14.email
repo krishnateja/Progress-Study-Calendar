@@ -1,0 +1,47 @@
+<messaging:emailTemplate subject="Failed Automatic Payment Transaction" recipientType="Contact" relatedToType="fw1__Invoice__c">
+<messaging:htmlEmailBody >
+<html style="font-family:'Arial' 'Sans-Serif';">
+
+<body>
+<br/>
+<apex:outputText rendered="{!relatedto.fw1__Recipient_Name__c != null}">
+    Dear {!relatedto.fw1__Recipient_Name__c},
+    <br/>
+</apex:outputText>
+<br/>
+
+This is to notify you that automatic payment for Invoice # {!Relatedto.Name} has failed.
+<br/>
+{!Relatedto.fw1__Credit_Card_Failure_Reason__c}
+<br/><br/>
+INVOICE INFORMATION<br/>
+Invoice #   : {!Relatedto.Name} <br/>
+Due Date    :  <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+               <apex:param value="{!Relatedto.fw1__Due_Date__c}" /> 
+             </apex:outputText><br/>
+Balance Due :           
+<apex:outputText >{!Relatedto.fw1__Email_Currency_Symbol__c}</apex:outputText>
+                            <apex:outputText value=" {0, number, ###,###,###,###,##0.00}"> 
+                                <apex:param value="{!Relatedto.fw1__Balance_Due__c}"/> 
+                            </apex:outputText>
+<br/><br/>
+We will automatically retry this charge on
+<apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+    <apex:param value="{!Relatedto.fw1__Retry_Date__c}" /> 
+</apex:outputText>
+<br/><br/>
+ <apex:outputLink rendered="{!Relatedto.fw1__Domain_Name__c != null}" value="https://{!Relatedto.fw1__Domain_Name__c}/fw1__WebPayments?scontrolCaching=1&id={!Relatedto.Id}" >Click here to pay online and update your card on file</apex:outputLink>
+<br/><br/>
+Sincerely, <br/><br/>
+{!$User.CompanyName}<br/>
+{!$Organization.Street}<br/>
+{!$Organization.City},
+{!$Organization.State} 
+{!$Organization.PostalCode}<br/>
+{!$Organization.Country}<br/>
+{!$Organization.Phone}<br/>
+<br/>
+</body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>
