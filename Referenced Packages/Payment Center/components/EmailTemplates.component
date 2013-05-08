@@ -1,8 +1,0 @@
-<apex:component controller="fw1.EmailTemplatesController">
-    <apex:attribute name="value" description="" type="String" required="true"></apex:attribute>
-
-    <apex:selectList size="1" value="{!value}" >
-        <apex:selectOptions value="{!emailTemplates}"/>
-    </apex:selectList>
-    
-</apex:component>
